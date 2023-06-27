@@ -8,11 +8,17 @@ function Content(props) {
   const invalid = useSelector((store) => {
     return store.invalid;
   });
+
+  const checkValid = () => {
+    if (invalid) {
+      alert("Invalid JSON Variable");
+    }
+  };
   return (
     <div className="content">
       <Tabs variant="enclosed" defaultIndex={1}>
         <TabList>
-          <Tab isDisabled={invalid}>Viewer</Tab>
+          <Tab onClick={checkValid}>Viewer</Tab>
           <Tab>Text</Tab>
         </TabList>
         <TabPanels>

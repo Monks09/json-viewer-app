@@ -1,6 +1,7 @@
 const initialState = {
     jsonData: "",
     invalid: true,
+    selectedObject: "",
 };
 
 const reducer = (state = initialState, action) => {
@@ -9,12 +10,18 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 jsonData: action.payload,
+                selectedObject: action.payload,
                 invalid: false,
             }
         case "SET_INVALID_TRUE":
             return {
                 ...state,
                 invalid: true,
+            }
+        case "UPDATE_SELECTED_OBJECT":
+            return {
+                ...state,
+                selectedObject: action.payload,
             }
         default:
             return state;

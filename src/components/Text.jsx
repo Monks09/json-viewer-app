@@ -14,7 +14,6 @@ function Text(props) {
       });
     } catch (err) {
       //   console.log(err);
-      alert("Invalid JSON Error");
       dispatch({
         type: "SET_INVALID_TRUE",
       });

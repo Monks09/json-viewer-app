@@ -5,12 +5,12 @@
 }
 
 body {
-  background-color: aquamarine;
+  background-color: blue;
 }
 
 .content {
-  background-color: rgb(238, 238, 238);
-  height: 80vh;
+  background-color: rgb(190, 190, 190);
+  height: 85vh;
 }
 
 .buttons {
@@ -28,17 +28,39 @@ body {
 .viewer-tab {
   display: flex;
   gap: 10px;
-}
+  font-size: 14px;
 
-.viewer-tab>div {
-  background-color: white;
-  min-height: 100%;
 }
 
 .tree-section {
   width: 75%;
+  background-color: white;
+  overflow-y: scroll;
+  height: 70vh;
 }
 
 .data-section {
   width: 25%;
+  height: fit-content;
+  background-color: white;
+}
+
+.label {
+  font-weight: bold;
+}
+
+.data-table {
+  width: 100%;
+  text-align: left;
+}
+
+.data-table tr {
+  border: 1px solid rgb(174, 171, 171);
+  padding: 5px 0px;
+}
+
+.data-table th,
+.data-table td {
+  border: 1px solid black;
+  padding: 5px;
 }
