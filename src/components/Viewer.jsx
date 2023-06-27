@@ -11,6 +11,10 @@ function Viewer(props) {
     return store.selectedObject;
   });
 
+  const invalid = useSelector((store) => {
+    return store.invalid;
+  });
+
   const isArray = (data) => {
     return data instanceof Object && data instanceof Array;
   };
@@ -27,7 +31,7 @@ function Viewer(props) {
   return (
     <div className="viewer-tab">
       <div className="tree-section">
-        {jsonData && <DataList data={jsonData} label="JSON" />}
+        {!invalid && <DataList data={jsonData} label="JSON" />}
       </div>
       <div className="data-section">
         <table className="data-table">

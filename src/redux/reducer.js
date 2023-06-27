@@ -17,6 +17,8 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 invalid: true,
+                jsonData: "",
+                selectedObject: "",
             }
         case "UPDATE_SELECTED_OBJECT":
             return {
