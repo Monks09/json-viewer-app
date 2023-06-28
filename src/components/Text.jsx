@@ -19,15 +19,26 @@ function Text(props) {
   const textRef = useRef(null);
   const urlRef = useRef(null);
 
+  function fixUnquotedJSON(unquotedJSON) {
+    // Use regular expressions to add quotes to unquoted keys
+    const fixedJSON = unquotedJSON.replace(
+      /([{,])(\s*)([A-Za-z_][A-Za-z0-9_]*)\s*:/g,
+      '$1"$3":'
+    );
+    return fixedJSON;
+  }
+
   const handleChange = () => {
     try {
-      const text = JSON.parse(textRef.current.value);
+      const fixedText = fixUnquotedJSON(textRef.current.value);
+      const text = JSON.parse(fixedText);
+      console.log(text);
       dispatch({
         type: "UPDATE_JSON_DATA",
         payload: text,
       });
     } catch (err) {
-      //   console.log(err);
+      console.log(err);
       dispatch({
         type: "SET_INVALID_TRUE",
       });
@@ -63,7 +74,8 @@ function Text(props) {
   };
 
   const formatText = () => {
-    var textArea = textRef.current;
+    const textArea = textRef.current;
+    textArea.value = fixUnquotedJSON(textArea.value);
     if (!isValidJson(textArea.value)) {
       alert("Invalid JSON Variable, Unable to format");
       return;
@@ -73,7 +85,8 @@ function Text(props) {
   };
 
   const removeWhiteSpaces = () => {
-    var textArea = textRef.current;
+    const textArea = textRef.current;
+    textArea.value = fixUnquotedJSON(textArea.value);
     if (!isValidJson(textArea.value)) {
       alert("Invalid JSON Variable, Unable to format");
       return;
