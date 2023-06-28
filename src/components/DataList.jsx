@@ -32,9 +32,9 @@ function DataList({ data, label }) {
       >
         {data.map((elem, i) => {
           if (typeof elem === "object") {
-            return <DataList data={elem} label={i} />;
+            return <DataList key={i} data={elem} label={i} />;
           } else {
-            return <div>{elem}</div>;
+            return <div key={i}>{elem}</div>;
           }
         })}
       </TreeView>
@@ -49,10 +49,10 @@ function DataList({ data, label }) {
       >
         {Object.keys(data).map((key) => {
           if (typeof data[key] === "object") {
-            return <DataList data={data[key]} label={key} />;
+            return <DataList key={key} data={data[key]} label={key} />;
           } else {
             return (
-              <div>
+              <div key={key}>
                 <b>{key}</b> : {data[key]}
               </div>
             );

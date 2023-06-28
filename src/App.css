@@ -64,3 +64,8 @@ body {
   border: 1px solid black;
   padding: 5px;
 }
+
+#url {
+  border: 1px solid black;
+  width: 100%;
+}

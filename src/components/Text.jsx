@@ -1,13 +1,27 @@
-import React from "react";
-import { Button } from "@chakra-ui/react";
+import React, { useRef } from "react";
 import { useDispatch } from "react-redux";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  Button,
+} from "@chakra-ui/react";
 
 function Text(props) {
   const dispatch = useDispatch();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const textRef = useRef(null);
+  const urlRef = useRef(null);
 
   const handleChange = () => {
     try {
-      const text = JSON.parse(document.getElementById("json-textarea").value);
+      const text = JSON.parse(textRef.current.value);
       dispatch({
         type: "UPDATE_JSON_DATA",
         payload: text,
@@ -20,8 +34,17 @@ function Text(props) {
     }
   };
 
+  const isValidJson = (data) => {
+    try {
+      JSON.parse(data);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
+
   const copyText = () => {
-    const text = document.getElementById("json-textarea");
+    const text = textRef.current;
     text.select();
     navigator.clipboard.writeText(text.value);
     alert("Text Copied");
@@ -29,14 +52,48 @@ function Text(props) {
 
   const pasteText = async () => {
     await navigator.clipboard.readText().then((clipText) => {
-      document.getElementById("json-textarea").value += clipText;
+      textRef.current.value += clipText;
     });
     handleChange();
   };
 
   const clearText = () => {
-    document.getElementById("json-textarea").value = "";
+    textRef.current.value = "";
     handleChange();
+  };
+
+  const formatText = () => {
+    var textArea = textRef.current;
+    if (!isValidJson(textArea.value)) {
+      alert("Invalid JSON Variable, Unable to format");
+      return;
+    }
+    var formattedText = JSON.stringify(JSON.parse(textArea.value), null, 2);
+    textArea.value = formattedText;
+  };
+
+  const removeWhiteSpaces = () => {
+    var textArea = textRef.current;
+    if (!isValidJson(textArea.value)) {
+      alert("Invalid JSON Variable, Unable to format");
+      return;
+    }
+    var formattedText = JSON.stringify(JSON.parse(textArea.value), null, 0);
+    textArea.value = formattedText;
+  };
+
+  const loadJSONData = async () => {
+    const urlInput = urlRef.current.value;
+
+    try {
+      let res = await fetch(urlInput);
+      let data = await res.json();
+      textRef.current.value = JSON.stringify(data);
+      handleChange();
+      onClose();
+    } catch (err) {
+      alert("Invalid url provided");
+    }
   };
 
   return (
@@ -48,21 +105,22 @@ function Text(props) {
         <Button variant={"ghost"} size={"xs"} onClick={copyText}>
           Copy
         </Button>
-        <Button variant={"ghost"} size={"xs"}>
+        <Button variant={"ghost"} size={"xs"} onClick={formatText}>
           Format
         </Button>
-        <Button variant={"ghost"} size={"xs"}>
+        <Button variant={"ghost"} size={"xs"} onClick={removeWhiteSpaces}>
           Remove white space
         </Button>
         <Button variant={"ghost"} size={"xs"} onClick={clearText}>
           Clear
         </Button>
-        <Button variant={"ghost"} size={"xs"}>
+        <Button variant={"ghost"} size={"xs"} onClick={onOpen}>
           Load JSON data
         </Button>
       </div>
       <div className="json-text">
         <textarea
+          ref={textRef}
           name="json-textarea"
           id="json-textarea"
           cols="30"
@@ -71,6 +129,30 @@ function Text(props) {
           onChange={handleChange}
         ></textarea>
       </div>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Online JSON Viewer</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <div className="url-input-div">
+              <label htmlFor="url">Url:</label>
+              <input ref={urlRef} type="text" name="url" id="url" />
+            </div>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              variant="solid"
+              margin={"auto"}
+              bgColor={"blue.400"}
+              color={"white"}
+              onClick={loadJSONData}
+            >
+              Load JSON Data
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </div>
   );
 }
